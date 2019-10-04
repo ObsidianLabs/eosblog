@@ -4,6 +4,7 @@ import eos from './eos';
 class AuthManager {
   constructor() {
     this.eos = eos;
+    this.account = 'eosblogtest1';
     this.fetchAuth();
   }
 
@@ -19,7 +20,7 @@ class AuthManager {
       const result = await this.eos.transact({
         actions: [{
           account,
-          name: 'clear',
+          name: 'login',
           authorization: [{
             actor: account,
             permission: 'active',
@@ -64,7 +65,7 @@ class AuthManager {
   }
 
   isLoginBefore() {
-    return !!this.account;
+    return !!this.account && !!this.ciphertext;
   }
 
   reset() {
@@ -74,14 +75,22 @@ class AuthManager {
   }
 
   static encrypt(plaintext, password) {
-    const ciphertext = CryptoJS.AES.encrypt(plaintext, password).toString();
-    return ciphertext;
+    try {
+      const ciphertext = CryptoJS.AES.encrypt(plaintext, password).toString();
+      return ciphertext;
+    } catch (error) {
+      return '';
+    }
   }
 
   static decrypt(ciphertext, password) {
-    const bytes = CryptoJS.AES.decrypt(ciphertext, password);
-    const plaintext = bytes.toString(CryptoJS.enc.Utf8);
-    return plaintext;
+    try {
+      const bytes = CryptoJS.AES.decrypt(ciphertext, password);
+      const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+      return plaintext;
+    } catch (error) {
+      return '';
+    }
   }
 }
 
