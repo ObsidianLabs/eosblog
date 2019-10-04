@@ -25,8 +25,8 @@ class PostManager {
     try {
       const result = await this.eos.getTableRows({
         json: true,
-        code: this.authManager.username,
-        scope: this.authManager.username,
+        code: this.authManager.account,
+        scope: this.authManager.account,
         table: 'post',
         reverse: true,
         limit: 5,

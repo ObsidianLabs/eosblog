@@ -25,7 +25,7 @@ export default new Router({
       path: '/login',
       name: 'login',
       // FIXME: replace to login page
-      component: Home,
+      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
     },
   ],
 });

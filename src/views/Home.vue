@@ -21,7 +21,6 @@
 
 <script>
 // @ is an alias to /src
-import postManager from '@/lib/post';
 import PostPreview from '@/components/PostPreview.vue';
 
 export default {
@@ -39,7 +38,7 @@ export default {
   },
   methods: {
     async fetchBlogs() {
-      this.posts = await postManager.fetchPosts();
+      this.posts = await this.$post.fetchPosts();
     },
   },
 };

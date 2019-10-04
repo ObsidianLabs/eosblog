@@ -6,7 +6,8 @@
         <router-link to="/about">About</router-link>
       </div>
       <div class="right">
-        <router-link to="/login">Login</router-link>
+        <a v-if="isLogin">Logout</a>
+        <router-link v-else to="/login">Login</router-link>
       </div>
     </div>
   </div>
@@ -15,6 +16,11 @@
 <script>
 export default {
   name: 'app-header',
+  computed: {
+    isLogin() {
+      return this.$auth.isLogin();
+    },
+  },
 };
 </script>
 
