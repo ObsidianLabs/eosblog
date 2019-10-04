@@ -1,10 +1,19 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import auth from '@/lib/auth';
 import Home from './views/Home.vue';
 
 Vue.use(Router);
 
-export default new Router({
+const requireAuth = (to, from, next) => {
+  if (auth.isLogin()) {
+    next();
+  } else {
+    next('/login');
+  }
+};
+
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -24,8 +33,44 @@ export default new Router({
     {
       path: '/login',
       name: 'login',
-      // FIXME: replace to login page
       component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
+    },
+    {
+      path: '/post/:id',
+      name: 'post',
+      props: true,
+      component: () => import(/* webpackChunkName: "post" */ './views/Post.vue'),
+    },
+    {
+      path: '/category',
+      component: () => import(/* webpackChunkName: "category" */ './views/Category.vue'),
+    },
+    {
+      path: '/compose',
+      name: 'compose',
+      beforeEnter: requireAuth,
+      component: () => import(/* webpackChunkName: "compose" */ './views/Compose.vue'),
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      beforeEnter: requireAuth,
+      component: () => import(/* webpackChunkName: "dashboard" */ './views/Dashboard.vue'),
+    },
+    {
+      path: '/welcome',
+      name: 'welcome',
+      component: () => import(/* webpackChunkName: "welcome" */ './views/Welcome.vue'),
     },
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  if (localStorage.getItem('account') || to.name === 'welcome') {
+    next();
+  } else {
+    next('/welcome');
+  }
+});
+
+export default router;

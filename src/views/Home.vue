@@ -1,19 +1,19 @@
 <template>
   <div class="home">
-    <div class="blog-header">
-      EOS Blog
-    </div>
     <div class="center-wrapper">
-      <PostPreview
+      <PostCard
         v-for="(post, index) in posts"
-        :key="index"
+        :size="getSize(index)"
+        :key="post.id"
         :title="post.title"
         :content="post.content"
+        :cover="post.cover"
         :author="post.author"
         :category="post.category"
         :created-at="post.created_at"
         :updated-at="post.updated_at"
-        :metadata="post.metadata"
+        :metadata="JSON.parse(post.metadata || '{}')"
+        @click.native="handleRoute(post.id)"
       />
     </div>
   </div>
@@ -21,12 +21,12 @@
 
 <script>
 // @ is an alias to /src
-import PostPreview from '@/components/PostPreview.vue';
+import PostCard from '@/components/PostCard.vue';
 
 export default {
   name: 'home',
   components: {
-    PostPreview,
+    PostCard,
   },
   data() {
     return {
@@ -39,6 +39,24 @@ export default {
   methods: {
     async fetchBlogs() {
       this.posts = await this.$post.fetchPosts();
+      // this.posts = [
+      //   ...this.posts,
+      //   ...this.posts,
+      //   ...this.posts,
+      //   ...this.posts,
+      //   ...this.posts,
+      // ];
+    },
+    handleRoute(id) {
+      this.$router.push(`/post/${id}`);
+    },
+    getSize(index) {
+      if (index % 6 === 0) {
+        return 'large';
+      } if (index % 6 === 4 || index % 6 === 5) {
+        return 'medium';
+      }
+      return 'small';
     },
   },
 };
@@ -49,20 +67,14 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .blog-header {
-    width: 100%;
-    height: 600px;
-    position: relative;
-    background-image: url("https://i.imgur.com/7hix8lO.jpg");
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    font-size: 64px;
+  .center-wrapper {
+    margin-top: -70px;
+    padding-top: 0;
+    z-index: 100;
+    padding: 0 20px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-weight: bold;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
 }
 </style>
