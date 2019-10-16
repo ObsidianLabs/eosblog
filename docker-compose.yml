@@ -4,7 +4,7 @@ services:
   eosblog:
     build:
       context: .
-    image: leonlianght/eosblog:0.1
+    image: leonlianght/eosblog:0.4
     networks:
       - eosblog-network
     ports:

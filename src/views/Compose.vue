@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper" id="compose">
     <div class="center-wrapper">
-      <h1>Write a new post</h1>
+      <h1 v-if="form.id">Edit a post</h1>
+      <h1 v-else>Write a new post</h1>
       <Form :model="form" :label-width="80">
         <FormItem label="Title">
           <Input v-model="form.title" placeholder="A good post starts with a good title" />
@@ -61,13 +62,30 @@ export default {
     };
   },
   methods: {
+    async fetchPost() {
+      const result = await this.$post.fetchPost(this.id);
+      if (result && result.id) {
+        this.form = result;
+      } else {
+        this.resetForm();
+      }
+    },
     async handleSubmit() {
       this.loading = true;
-      const result = await this.$post.createPost(this.form);
-      if (result) {
-        console.log('success');
-        this.$router.push('/');
+      if (this.form.id) {
+        const result = await this.$post.updatePost(this.form);
+        if (result) {
+          console.log('success');
+          this.$router.push(`/post/${this.form.id}`);
+        }
+      } else {
+        const result = await this.$post.createPost(this.form);
+        if (result) {
+          console.log('success');
+          this.$router.push('/');
+        }
       }
+
       this.loading = false;
     },
     resetForm() {
@@ -83,6 +101,9 @@ export default {
   },
   mounted() {
     this.resetForm();
+    if (this.id) {
+      this.fetchPost();
+    }
   },
 };
 </script>

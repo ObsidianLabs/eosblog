@@ -7,6 +7,19 @@
             <time>{{ formatTime(post.created_at) }}</time>
             <span>/</span>
             <a @click="$router.push(`/category/${post.category}`)">{{ post.category }}</a>
+            <span v-if="$auth.isLogin()">/</span>
+            <a  v-if="$auth.isLogin()" @click="$router.push(`/compose/${post.id}`)">Edit</a>
+            <span v-if="$auth.isLogin()">/</span>
+            <a v-if="$auth.isLogin()" @click="showDeleteConfirm = true">Delete</a>
+            <Modal
+              v-model="showDeleteConfirm"
+              title="Are you sure to delete this post?"
+              okText="Confirm"
+              cancelText="Cancel"
+              @on-ok="deletePost"
+              @on-cancel="showDeleteConfirm = false">
+              <p>The post will be deleted from your account.</p>
+            </Modal>
           </div>
           <h1 class="post-title">{{ post.title }}</h1>
         </header>
@@ -21,6 +34,7 @@
 
 <script>
 import dayjs from 'dayjs';
+import { Modal } from 'iview';
 
 export default {
   name: 'post',
@@ -30,9 +44,13 @@ export default {
       type: String,
     },
   },
+  components: {
+    Modal,
+  },
   data() {
     return {
       post: undefined,
+      showDeleteConfirm: false,
     };
   },
   computed: {
@@ -57,6 +75,12 @@ export default {
     },
     formatTime(unix) {
       return dayjs.unix(unix).format('YYYY-MM-DD');
+    },
+    async deletePost() {
+      const result = await this.$post.deletePost(this.id);
+      if (result) {
+        this.$router.push('/');
+      }
     },
   },
 };

@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     async fetchConfig() {
-      this.form = await this.$post.fetchConfig() || {};
+      this.form = await this.$post.fetchConfig();
     },
     async handleSubmit() {
       // TODO
