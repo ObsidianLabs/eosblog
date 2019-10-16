@@ -1,0 +1,14 @@
+**/node_modules
+**/electron
+**/.git
+**/.vscode
+**/logs
+**/runs
+.env
+.eslintignore
+.eslintrc
+.gitattributes
+.gitignore
+.DS_Store
+docker-compose.yml
+yarn-error.log
