@@ -12,7 +12,26 @@
           </div>
         </div>
         <div class="category-content">
-          <div v-for="post in categoryPosts" :key="post.id">{{ post.title }}</div>
+          <!-- <div
+            v-for="post in categoryPosts"
+            :key="post.id"
+            @click="">
+            {{ post.title }}
+          </div> -->
+          <PostCard
+            v-for="post in categoryPosts"
+            size="small"
+            :key="post.id"
+            :title="post.title"
+            :content="post.content"
+            :cover="post.cover"
+            :author="post.author"
+            :category="post.category"
+            :created-at="post.created_at"
+            :updated-at="post.updated_at"
+            :metadata="JSON.parse(post.metadata || '{}')"
+            @click.native="$router.push(`/post/${post.id}`)"
+          />
         </div>
       </div>
     </div>
@@ -20,6 +39,8 @@
 </template>
 
 <script>
+import PostCard from '@/components/PostCard.vue';
+
 export default {
   name: 'category',
   data() {
@@ -29,6 +50,9 @@ export default {
       selectedCategory: '',
       categoryPosts: [],
     };
+  },
+  components: {
+    PostCard,
   },
   methods: {
     async fetchCategory() {
@@ -66,13 +90,20 @@ export default {
   .category-wrapper {
     display: flex;
     .category-index {
-      flex: 0 0 200px;
+      flex: 0 0 150px;
       border-right: solid 1px #ddd;
-      padding: 10px;
+      padding: 0 10px;
+      > div {
+        cursor: pointer;
+        margin: 10px 0;
+      }
     }
     .category-content {
       flex: 1 0;
-      padding: 10px;
+      margin: 0 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
     }
   }
 }
