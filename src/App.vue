@@ -37,7 +37,6 @@ body {
   font-style: normal;
   letter-spacing: 0;
   text-rendering: optimizeLegibility;
-  background: #cbeafb;
   margin: 0 !important;
   padding: 0 !important;
   height: 100%;
