@@ -14,7 +14,7 @@
       </section>
       <footer>
         <span class="post-card-created">
-          {{ createdAt }}
+          {{ formatTime(createdAt) }}
         </span>
       </footer>
     </div>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+
 export default {
   name: 'post-card',
   props: {
@@ -69,6 +71,11 @@ export default {
       return {
         backgroundImage: `url(${this.cover})`,
       };
+    },
+  },
+  methods: {
+    formatTime(unix) {
+      return dayjs.unix(unix).format('YYYY-MM-DD');
     },
   },
 };

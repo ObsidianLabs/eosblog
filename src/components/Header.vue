@@ -1,9 +1,9 @@
 <template>
-  <header class="wrapper" id="site-header">
+  <header class="wrapper" id="site-header" :style="headerStyle">
     <div class="center-wrapper">
       <div class="site-header-content" :class="mode">
-        <h1 class="site-title">Obsidian Labs</h1>
-        <h2 class="site-description">Engineer rules the world</h2>
+        <h1 class="site-title">{{ config.blogname }}</h1>
+        <h2 class="site-description">{{ config.description }}</h2>
       </div>
       <div class="site-nav" :class="mode">
         <div class="left">
@@ -63,6 +63,11 @@ export default {
       mode: 'large',
       isLogin: false,
       resetConfirm: false,
+      config: {
+        blogname: 'EOS Blog',
+        description: 'An EOS blog powered by Obsidian Labs',
+        cover: 'https://images.unsplash.com/photo-1447876576829-25dd6c4b3d21?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2917&q=80',
+      },
     };
   },
   components: {
@@ -72,7 +77,25 @@ export default {
     Icon,
     Modal,
   },
+  computed: {
+    headerStyle() {
+      return {
+        backgroundImage: `url('${this.config.cover}')`,
+      };
+    },
+  },
   methods: {
+    async fetchConfig() {
+      const result = await this.$post.fetchConfig();
+      if (result) {
+        this.config = {
+          ...this.config,
+          ...result,
+        };
+      } else {
+        this.setDefaultConfig();
+      }
+    },
     handleRouteChange() {
       if (this.$route.name === 'home') {
         this.mode = 'large';
@@ -80,6 +103,14 @@ export default {
         this.mode = 'small';
       }
       this.isLogin = this.$auth.isLogin();
+      this.fetchConfig();
+    },
+    setDefaultConfig() {
+      this.config = {
+        blogname: 'EOS Blog',
+        descrption: 'An EOS blog powered by Obsidian Labs',
+        cover: 'https://images.unsplash.com/photo-1447876576829-25dd6c4b3d21?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2917&q=80',
+      };
     },
     reset() {
       localStorage.removeItem('account');
@@ -90,6 +121,7 @@ export default {
   },
   mounted() {
     this.handleRouteChange();
+    this.fetchConfig();
   },
   watch: {
     $route() {
@@ -103,7 +135,6 @@ export default {
 $transition-time: 1s;
 #site-header {
   position: relative;
-  background-image: url('https://images.unsplash.com/photo-1447876576829-25dd6c4b3d21?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2917&q=80');
   background-size: cover;
   background-position: center;
   padding: 12px 0;

@@ -42,9 +42,7 @@ const router = new Router({
       component: () => import(/* webpackChunkName: "post" */ './views/Post.vue'),
     },
     {
-      path: '/category/:name',
-      name: 'category',
-      props: true,
+      path: '/category',
       component: () => import(/* webpackChunkName: "category" */ './views/Category.vue'),
     },
     {

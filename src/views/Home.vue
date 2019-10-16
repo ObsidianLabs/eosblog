@@ -31,17 +31,12 @@ export default {
   data() {
     return {
       posts: [],
-      config: {},
     };
   },
   mounted() {
-    this.fetchConfig();
     this.fetchBlogs();
   },
   methods: {
-    async fetchConfig() {
-      this.config = await this.$post.fetchConfig();
-    },
     async fetchBlogs() {
       this.posts = await this.$post.fetchPosts();
       // this.posts = [

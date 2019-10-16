@@ -15,7 +15,7 @@ class PostManager {
         scope: this.authManager.account,
         table: 'post',
         reverse: true,
-        limit: 5,
+        limit: 100,
       });
       // FIXME: remove mock cover
       result.rows.forEach((row) => {
@@ -51,6 +51,33 @@ class PostManager {
     return undefined;
   }
 
+  async fetchPostByCategory(category) {
+    try {
+      const result = await this.eos.getTableRows({
+        json: true,
+        code: this.authManager.account,
+        scope: this.authManager.account,
+        table: 'post',
+        reverse: true,
+        limit: 100,
+        lower_bound: category,
+        upper_bound: category,
+        key_type: 'name',
+        index_position: 2,
+      });
+      // FIXME: remove mock cover
+      result.rows.forEach((row) => {
+        if (!row.cover) {
+          row.cover = 'https://images.unsplash.com/photo-1564428658805-8001c05e05c0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80';
+        }
+      });
+      return result.rows;
+    } catch (error) {
+      console.log(error);
+    }
+    return [];
+  }
+
   async createPost(form) {
     try {
       const result = await this.eos.transact({
@@ -74,6 +101,22 @@ class PostManager {
     return false;
   }
 
+  async fetchCategory() {
+    try {
+      const result = await this.eos.getTableRows({
+        json: true,
+        code: this.authManager.account,
+        scope: this.authManager.account,
+        table: 'category',
+        limit: 100,
+      });
+      return result.rows;
+    } catch (error) {
+      console.log(error);
+    }
+    return [];
+  }
+
   async fetchConfig() {
     try {
       const result = await this.eos.getTableRows({
@@ -83,16 +126,34 @@ class PostManager {
         table: 'config',
         limit: 1,
       });
-      debugger;
-      return result.rows;
+      return result.rows[0];
     } catch (error) {
       console.log(error);
     }
     return {};
   }
 
-  async updateConfig() {
-
+  async updateConfig(form) {
+    try {
+      const result = await this.eos.transact({
+        actions: [{
+          account: this.authManager.account,
+          name: 'setconfig',
+          authorization: [{
+            actor: this.authManager.account,
+            permission: 'active',
+          }],
+          data: form,
+        }],
+      }, {
+        blocksBehind: 3,
+        expireSeconds: 30,
+      });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return false;
   }
 }
 

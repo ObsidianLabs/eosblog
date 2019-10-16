@@ -4,7 +4,7 @@
       <article v-if="post">
         <header class="post-header">
           <div class="post-meta">
-            <time>{{ post.created_at }}</time>
+            <time>{{ formatTime(post.created_at) }}</time>
             <span>/</span>
             <a @click="$router.push(`/category/${post.category}`)">{{ post.category }}</a>
           </div>
@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
+
 export default {
   name: 'post',
   props: {
@@ -52,6 +54,9 @@ export default {
     async fetchPost(id) {
       this.post = await this.$post.fetchPost(id);
       console.log(this.post);
+    },
+    formatTime(unix) {
+      return dayjs.unix(unix).format('YYYY-MM-DD');
     },
   },
 };
