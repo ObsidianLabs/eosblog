@@ -101,6 +101,54 @@ class PostManager {
     return false;
   }
 
+  async updatePost(form) {
+    try {
+      const result = await this.eos.transact({
+        actions: [{
+          account: this.authManager.account,
+          name: 'updatepost',
+          authorization: [{
+            actor: this.authManager.account,
+            permission: 'active',
+          }],
+          data: form,
+        }],
+      }, {
+        blocksBehind: 3,
+        expireSeconds: 30,
+      });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return false;
+  }
+
+  async deletePost(id) {
+    try {
+      const result = await this.eos.transact({
+        actions: [{
+          account: this.authManager.account,
+          name: 'deletepost',
+          authorization: [{
+            actor: this.authManager.account,
+            permission: 'active',
+          }],
+          data: {
+            id,
+          },
+        }],
+      }, {
+        blocksBehind: 3,
+        expireSeconds: 30,
+      });
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+    return false;
+  }
+
   async fetchCategory() {
     try {
       const result = await this.eos.getTableRows({
@@ -126,11 +174,21 @@ class PostManager {
         table: 'config',
         limit: 1,
       });
+      if (!result.rows.length) {
+        throw new Error('no record');
+      }
       return result.rows[0];
     } catch (error) {
       console.log(error);
     }
-    return {};
+    // default
+    return {
+      blogname: 'EOS Blog',
+      description: 'An EOS blog powered by Obsidian Labs',
+      cover: 'https://images.unsplash.com/photo-1447876576829-25dd6c4b3d21?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2917&q=80',
+      version: 1.0,
+      metadata: '{}',
+    };
   }
 
   async updateConfig(form) {

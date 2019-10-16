@@ -9,7 +9,8 @@
         <div class="left">
           <router-link to="/">Home</router-link>
           <router-link to="/category">Category</router-link>
-          <router-link to="/about">About</router-link>
+          <!-- <router-link to="/about">About</router-link> -->
+          <a href="https://eosstudio.io" target="__blank">About</a>
         </div>
         <div class="right">
           <Dropdown v-if="isLogin">
@@ -23,7 +24,7 @@
               <DropdownItem>
                 <router-link tag="div" to="/dashboard">Dashboard</router-link>
               </DropdownItem>
-              <DropdownItem divided>Logout</DropdownItem>
+              <DropdownItem divided @click="resetConfirm = true">Logout</DropdownItem>
             </DropdownMenu>
           </Dropdown>
           <router-link v-else to="/login">Login</router-link>
@@ -63,11 +64,7 @@ export default {
       mode: 'large',
       isLogin: false,
       resetConfirm: false,
-      config: {
-        blogname: 'EOS Blog',
-        description: 'An EOS blog powered by Obsidian Labs',
-        cover: 'https://images.unsplash.com/photo-1447876576829-25dd6c4b3d21?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2917&q=80',
-      },
+      config: {},
     };
   },
   components: {
@@ -87,14 +84,7 @@ export default {
   methods: {
     async fetchConfig() {
       const result = await this.$post.fetchConfig();
-      if (result) {
-        this.config = {
-          ...this.config,
-          ...result,
-        };
-      } else {
-        this.setDefaultConfig();
-      }
+      this.config = result;
     },
     handleRouteChange() {
       if (this.$route.name === 'home') {
@@ -104,13 +94,6 @@ export default {
       }
       this.isLogin = this.$auth.isLogin();
       this.fetchConfig();
-    },
-    setDefaultConfig() {
-      this.config = {
-        blogname: 'EOS Blog',
-        descrption: 'An EOS blog powered by Obsidian Labs',
-        cover: 'https://images.unsplash.com/photo-1447876576829-25dd6c4b3d21?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2917&q=80',
-      };
     },
     reset() {
       localStorage.removeItem('account');
