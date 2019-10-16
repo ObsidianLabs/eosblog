@@ -5,9 +5,9 @@ const DefaultEndpont = 'https://eos-studio.api.dfuse.dev';
 // const DefaultEndpont = 'http://localhost:8888';
 
 class EosjsClient {
-  constructor(privateKey, endpoint = DefaultEndpont) {
+  constructor(privateKey, endpoint = localStorage.getItem('endpoint')) {
     this.privateKey = privateKey;
-    this.endpoint = endpoint;
+    this.endpoint = endpoint || DefaultEndpont;
   }
 
   set privateKey(value) {

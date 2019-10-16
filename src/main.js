@@ -4,10 +4,12 @@ import router from './router';
 import store from './store';
 import './registerServiceWorker';
 import 'iview/dist/styles/iview.css';
+import eos from '@/lib/eos';
 import post from '@/lib/post';
 import auth from '@/lib/auth';
 
 Vue.config.productionTip = false;
+Vue.prototype.$eos = eos;
 Vue.prototype.$post = post;
 Vue.prototype.$auth = auth;
 

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper" id="login">
     <div class="center-wrapper">
-      <h1 v-if="$auth.isLogin()">Welcome back, {{ $auth.account }}</h1>
+      <h1 v-if="$auth.isLogin()">Welcome back, {{ $auth.account }}, redirecting to homepage...</h1>
       <h1 v-else>Login to EOS Blockchain</h1>
       <Form class="form" v-if="!$auth.isLogin()">
         <FormItem label="EOS Account Name">
@@ -82,7 +82,7 @@ export default {
       }
 
       if (isLogin) {
-        console.log('success');
+        this.$router.push('/');
       } else {
         console.log('failed');
       }

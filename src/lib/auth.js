@@ -2,9 +2,9 @@ import CryptoJS from 'crypto-js';
 import eos from './eos';
 
 class AuthManager {
-  constructor() {
+  constructor(account = localStorage.getItem('account')) {
     this.eos = eos;
-    this.account = 'eosblogtest1';
+    this.account = account || '';
     this.fetchAuth();
   }
 

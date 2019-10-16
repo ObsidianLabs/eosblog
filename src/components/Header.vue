@@ -1,51 +1,217 @@
 <template>
-  <div class="wrapper" id="app-header">
+  <header class="wrapper" id="site-header">
     <div class="center-wrapper">
-      <div class="left">
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
+      <div class="site-header-content" :class="mode">
+        <h1 class="site-title">Obsidian Labs</h1>
+        <h2 class="site-description">Engineer rules the world</h2>
       </div>
-      <div class="right">
-        <a v-if="isLogin">Logout</a>
-        <router-link v-else to="/login">Login</router-link>
+      <div class="site-nav" :class="mode">
+        <div class="left">
+          <router-link to="/">Home</router-link>
+          <router-link to="/category">Category</router-link>
+          <router-link to="/about">About</router-link>
+        </div>
+        <div class="right">
+          <Dropdown v-if="isLogin">
+            <a href="javascript:void(0)">
+              {{ this.$auth.account }}
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem>
+                <router-link tag="div" to="/compose">New Post</router-link>
+              </DropdownItem>
+              <DropdownItem>
+                <router-link tag="div" to="/dashboard">Dashboard</router-link>
+              </DropdownItem>
+              <DropdownItem divided>Logout</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+          <router-link v-else to="/login">Login</router-link>
+          <div class="reset" @click="resetConfirm = true">
+            <Icon type="ios-refresh" size="18"/>
+          </div>
+        </div>
+        <Modal
+          v-model="resetConfirm"
+          title="Are you sure to Reset?"
+          transfer
+          @on-ok="reset"
+          @on-cancel="resetConfirm = false"
+          ok-text="Confirm"
+          cancel-text="Cancel">
+          <p>Site will be reset to the initial status.</p>
+          <p>You will be redirected to the welcome page.</p>
+        </Modal>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 
 <script>
+import {
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Icon,
+  Modal,
+} from 'iview';
+
 export default {
-  name: 'app-header',
-  computed: {
-    isLogin() {
-      return this.$auth.isLogin();
+  name: 'site-header',
+  data() {
+    return {
+      mode: 'large',
+      isLogin: false,
+      resetConfirm: false,
+    };
+  },
+  components: {
+    Dropdown,
+    DropdownMenu,
+    DropdownItem,
+    Icon,
+    Modal,
+  },
+  methods: {
+    handleRouteChange() {
+      if (this.$route.name === 'home') {
+        this.mode = 'large';
+      } else {
+        this.mode = 'small';
+      }
+      this.isLogin = this.$auth.isLogin();
+    },
+    reset() {
+      localStorage.removeItem('account');
+      localStorage.removeItem('endpoint');
+      localStorage.removeItem('auth');
+      this.$router.replace('/welcome');
+    },
+  },
+  mounted() {
+    this.handleRouteChange();
+  },
+  watch: {
+    $route() {
+      this.handleRouteChange();
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#app-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 100;
-  width: 100%;
+$transition-time: 1s;
+#site-header {
+  position: relative;
+  background-image: url('https://images.unsplash.com/photo-1447876576829-25dd6c4b3d21?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2917&q=80');
+  background-size: cover;
+  background-position: center;
+  padding: 12px 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0,0,0,0.8);
-  height: 50px;
+  text-align: center;
+  color: white;
   .center-wrapper {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    flex-direction: column;
   }
-  a {
-    font-weight: bold;
-    color: white;
-    margin: 0 20px;
-    &.router-link-exact-active {
-      color: #42b983;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 10;
+    display: block;
+  }
+  .site-header-content {
+    transition: all $transition-time ease;
+    &.large {
+      padding: 10vw 4vw;
+    }
+    &.small {
+      padding: 0vw 4vw;
+      height: 0;
+      opacity: 0;
+    }
+    .site-title {
+      font-family: "Hiragino Sans GB","Hiragino Sans GB W3","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
+      margin: 0;
+      padding: 0;
+      font-size: 3.8rem;
+      font-weight: 400;
+      letter-spacing: 2px;
+    }
+    .site-description {
+      margin: 0;
+      padding: 5px 0;
+      font-size: 2.2rem;
+      font-weight: 300;
+      letter-spacing: .5px;
+      opacity: .8;
+    }
+  }
+  .site-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    letter-spacing: .4px;
+    font-size: 100%;
+    padding: 0 10px;
+    transition: all $transition-time ease;
+    &.large {
+      top: -70px;
+    }
+    &.small {
+      top: 0;
+    }
+    .left {
+      display: flex;
+      align-items: center;
+      text-transform: uppercase;
+      a {
+        padding: 10px 12px;
+        margin: 0 2px;
+        color: #fff;
+        opacity: .8;
+        transition: all .2s ease;
+        &:hover {
+          text-decoration: none;
+          opacity: 1;
+        }
+      }
+    }
+    .right {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      a {
+        display: block;
+        padding: 4px 12px;
+        margin: 0 10px;
+        border: 1px solid #fff;
+        color: #fff;
+        font-size: 1.2rem;
+        line-height: 1em;
+        border-radius: 10px;
+        opacity: .8;
+        transition: all .2s ease;
+        &:hover {
+          text-decoration: none;
+          opacity: 1;
+        }
+      }
+    }
+    .reset {
+      cursor: pointer;
+      opacity: .4;
+      transition: all .2s ease;
+      &:hover {
+        opacity: 1;
+      }
     }
   }
 }
