@@ -55,7 +55,7 @@ const router = new Router({
       path: '/compose/:id',
       props: true,
       beforeEnter: requireAuth,
-      component: () => import(/* webpackChunkName: "Compose" */ './views/Compose.vue'),
+      component: () => import(/* webpackChunkName: "compose" */ './views/Compose.vue'),
     },
     {
       path: '/dashboard',

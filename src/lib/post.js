@@ -174,7 +174,7 @@ class PostManager {
         table: 'config',
         limit: 1,
       });
-      if (!result.rows.length) {
+      if (!result.rows[0].blogname) {
         throw new Error('no record');
       }
       return result.rows[0];
