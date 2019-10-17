@@ -31,8 +31,6 @@ html {
 body {
   // overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  font-size: 1.5rem;
-  line-height: 1.6em;
   font-weight: 400;
   font-style: normal;
   letter-spacing: 0;
