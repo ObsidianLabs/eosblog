@@ -9,8 +9,10 @@
         <div class="left">
           <router-link to="/">Home</router-link>
           <router-link to="/category">Category</router-link>
-          <!-- <router-link to="/about">About</router-link> -->
           <a href="https://eosstudio.io" target="__blank">About</a>
+          <a href="https://github.com/leonlianght/eosblog" target="__blank">Frontend</a>
+          <a href="https://github.com/leonlianght/eosblog-contract" target="__blank">Contract</a>
+          <a href="https://app.eosstudio.io" target="__blank">IDE</a>
         </div>
         <div class="right">
           <Dropdown v-if="isLogin">

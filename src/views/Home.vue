@@ -39,13 +39,6 @@ export default {
   methods: {
     async fetchBlogs() {
       this.posts = await this.$post.fetchPosts();
-      // this.posts = [
-      //   ...this.posts,
-      //   ...this.posts,
-      //   ...this.posts,
-      //   ...this.posts,
-      //   ...this.posts,
-      // ];
     },
     handleRoute(id) {
       this.$router.push(`/post/${id}`);

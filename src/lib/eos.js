@@ -2,7 +2,6 @@ import { Api, JsonRpc } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 
 const DefaultEndpont = 'https://eos-studio.api.dfuse.dev';
-// const DefaultEndpont = 'http://localhost:8888';
 
 class EosjsClient {
   constructor(privateKey, endpoint = localStorage.getItem('endpoint')) {
